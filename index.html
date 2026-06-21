@@ -54,13 +54,14 @@
         <img src="https://cdn-icons-png.flaticon.com/128/9590/9590006.png" alt="Pointer" class="pointer">
     </div>
     <button class="spin-button" onclick="spinWheel()">Spin</button>
+    <button class="spin-button" onclick="addTask()">Add Task</button>
 
     <script>
         const canvas = document.getElementById('spinWheel');
         const ctx = canvas.getContext('2d');
         const sections = ['1000', '2000', '3000', '4000', '5000', '6000', '7000', '8000', '9000', '10000', '0'];
         const colors = [
-            '#FF6347', '#FFD700', '#32CD32', '#87CEEB', '#6A5ACD',
+            '#ffffff', '#FFD700', '#32CD32', '#87CEEB', '#6A5ACD',
             '#FF69B4', '#00CED1', '#FFD700', '#DC143C', '#4682B4', '#32CD32'
         ];
         const wheelRadius = canvas.width / 2;

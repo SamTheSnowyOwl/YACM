@@ -1,13 +1,20 @@
 const canvas = document.getElementById('spinWheel');
 const ctx = canvas.getContext('2d');
 
+const ianvas = document.getElementById('inventory');
+const itx = ianvas.getContext('2d');
+
 // Layout Configuration
 const blockWidth = 120;
 const blockHeight = 80;
-const gap = Math.floor((canvas.width-(blockWidth*5)) / 6); // Space between blocks
+const gap = Math.floor((canvas.width-(blockWidth*5)) / 6); 
+const igap = 26;
 
 // State tracking: just an array of objects representing our blocks
 let blocks = [];
+let iblocks = [];
+
+const imaxCols = Math.floor((ianvas.width - igap) / (blockWidth + igap));
 
 // Drawing the wheel
 function drawWheel() {
@@ -31,20 +38,80 @@ function drawWheel() {
     });
 }
 
+function drawInventory() {
+    itx.clearRect(0, 0, ianvas.width, ianvas.height);
+    iblocks.forEach((block, index) => {
+        const col = index % imaxCols;
+        const row = Math.floor(index / imaxCols);
+
+        const x = igap + col * (blockWidth + igap);
+        const y = igap + row * (blockHeight + igap);
+
+        itx.fillStyle = '#313131';
+        itx.fillRect(x, y, blockWidth, blockHeight);
+
+        itx.strokeStyle = 'rgba(20, 238, 31, 0.83)'
+        itx.lineWidth = 1;
+        itx.strokeRect(x, y, blockWidth, blockHeight);
+
+        itx.fillStyle = '#ffffff';
+        itx.font = 'bold 14px Arial';
+        itx.textAlign = 'center';
+        itx.textBaseline = 'middle';
+        itx.fillText(index + 1, x + blockWidth / 2, y + blockHeight / 2);
+    });
+}
+
+function handleCanvasClick(event, canvas, sourceArray, targetArray) {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    let clickedIndex = null;
+
+    sourceArray.forEach((block, index) => {
+        let x,y;
+        if (canvas===ianvas) {
+            const col = index % imaxCols;
+            const row = Math.floor(index / imaxCols);
+
+            x = igap + col * (blockWidth + igap);
+            y = igap + row * (blockHeight + igap);
+        } else {
+            x = gap + index * (blockWidth + gap);
+            y = 10;
+        }
+
+        if (mouseX >= x && mouseX <= x + blockWidth &&
+            mouseY >= y && mouseY <= y + blockHeight) {
+                clickedIndex = index;
+        }
+    });
+
+    if (clickedIndex !== null) {
+        const [movedBlock] = sourceArray.splice(clickedIndex, 1);
+        targetArray.push(movedBlock);
+        draw();
+    }
+}
+
+canvas.addEventListener('click', (e) => handleCanvasClick(e, canvas, blocks, iblocks));
+ianvas.addEventListener('click', (e) => handleCanvasClick(e, ianvas, iblocks, blocks));
+
 function addTask() {    
-    if (blocks.length >= 5) {
-        alert("Enough tasks for the day!");
+    if (iblocks.length >= 40) {
+        alert("Nah");
         return;
     }
 
-    blocks.push({});
-    drawWheel();
+    iblocks.push({});
+    draw();
 }
 
 function removeTask() {
     if (blocks.length > 0) {
         blocks.pop();
-        drawWheel();
+        draw();
     }
 }
 
@@ -80,4 +147,9 @@ function showResult() {
     });
 }
 
-drawWheel();
+function draw() {
+    drawWheel();
+    drawInventory();
+}
+
+draw();

@@ -21,13 +21,11 @@ canvas {
     background-color: #ffffff;    
 }
 .pointer {
-    position: absolute;
-    right: -60px; /* Move pointer outside the pie chart */
-    top: 50%;
-    transform: translateY(-50%);
+    position: absolute; 
+    top: 110px;
+    transform: translateY(-300%);
     width: 60px;
-    height: 60px;
-    z-index: 10;
+    height: 60px;    
 }
 .spin-button {
     margin-top: 20px;

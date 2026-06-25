@@ -16,6 +16,10 @@ let iblocks = [];
 
 const imaxCols = Math.floor((ianvas.width - igap) / (blockWidth + igap));
 
+let currentX = document.getElementById('blockPointer').style.right;
+let spinSpeed = 0;
+let isSpinning = false;
+
 // Drawing the wheel
 function drawWheel() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -87,11 +91,19 @@ function handleCanvasClick(event, canvas, sourceArray, targetArray) {
                 clickedIndex = index;
         }
     });
-
+    
     if (clickedIndex !== null) {
-        const [movedBlock] = sourceArray.splice(clickedIndex, 1);
-        targetArray.push(movedBlock);
-        draw();
+        if (targetArray === iblocks && targetArray.length >= 40) {
+            alert("Nah");
+            return;
+        } else if (targetArray === blocks && targetArray.length >= 5) {
+            alert("Enough tasks for one day!");
+            return;
+        } else {
+            const [movedBlock] = sourceArray.splice(clickedIndex, 1);
+            targetArray.push(movedBlock);
+            draw();
+        }        
     }
 }
 
@@ -117,31 +129,52 @@ function removeTask() {
 
 // Wheel spinning
 function spinWheel() {
+    const pointer = document.getElementById('blockPointer');
+
+    if (blocks.length === 0) {
+        alert("Not enough tasks.");
+        return;
+    }
+
     if (isSpinning) return;
-    isSpinning = true;
-    spinSpeed = Math.random() * 10 + 20;
-    const spinDuration = Math.random() * 5000 + 2500;
-    const deceleration = spinSpeed / (spinDuration / 20);
+    isSpinning = true; 
+    spinSpeed = Math.random() * 100 + 100;
+    const spinDuration = Math.random() * 5000 + 5000;
+    const deceleration = spinSpeed / (spinDuration / 100);
+    let spinCount = 1;
+
     const spinInterval = setInterval(() => {
-        currentAngle += (spinSpeed * Math.PI) / 180;
+        let rightVal = parseInt(pointer.style.right, 10);
+        if (rightVal <= 5) {
+            pointer.style.right = `${(6 - rightVal) + rightVal}px`;            
+            spinCount++;        
+        } else if (rightVal >= 735) {
+            pointer.style.right = `${rightVal - (rightVal-734)}px`;                    
+            spinCount++;
+        } else if (spinCount%2 == 1) {
+            pointer.style.right = `${rightVal - spinSpeed}px`;
+        } else {
+            pointer.style.right = `${rightVal + spinSpeed}px`;
+        }        
         spinSpeed -= deceleration;
         if (spinSpeed <= 0) {
             clearInterval(spinInterval);
             isSpinning = false;
-            showResult();
-        }
-        drawWheel();
+            setTimeout(() => {
+                showResult();
+            }, 500);                        
+        }                
     }, 20);
 }
 
 function showResult() {
-    const finalAngle = currentAngle % (2 * Math.PI);
-    const winningIndex = Math.floor((sections.length - (finalAngle / (2 * Math.PI) * sections.length)) % sections.length);
-    const winningAmount = sections[winningIndex];
-
+    const finalPos = parseInt(document.getElementById('blockPointer').style.right, 10);
+    const winningIndex = Math.ceil(((735 - finalPos) / (730 / blocks.length)));
+    const winningBlock = blocks[winningIndex];
+    
     Swal.fire({
-        title: 'Congratulations!',
-        text: `You won ${winningAmount}`,
+        title: 'Task Selected',
+        text: `Get to work on ${winningIndex}`,
         icon: 'success',
         confirmButtonText: 'OK'
     });

@@ -5,6 +5,7 @@ body {
     flex-direction: column;
     height: 100vh;
     margin: 0;
+    overflow: hidden;
     background-color: #4e4e4e;
     font-family: Arial, sans-serif;
 }
@@ -12,13 +13,14 @@ body {
     position: relative;       
 }
 .inventory-container {
-    position: relative;      
+    position: relative;          
 }
 .controls {
     margin-top: 10px;
 }
 canvas {
-    background-color: #ffffff;    
+    background-color: #ffffff;
+    box-shadow: inset 0 6px 10px rgba(0, 0, 0, 0.4);    
 }
 .pointer {
     position: absolute; 
@@ -39,4 +41,22 @@ canvas {
 }
 .spin-button:hover {
     background-color: #0056b3;
+}
+.del-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: #d21717;
+    color: #ffffff;
+    font-size: 18px;
+    cursor: pointer;
+}    
+.del-button:hover {
+    background-color: #ae1414;
+}  
+.del-button.active {
+    background-color: #333333;
+    color: #ff4d4d;
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.4);
 }    

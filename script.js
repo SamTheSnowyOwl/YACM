@@ -66,7 +66,7 @@ function drawInventory() {
     });
 }
 
-function handleCanvasClick(event, canvas, sourceArray, targetArray) {
+function handleCanvasClick(event, canvas, sourceArray, targetArray, delToggle) {
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -91,13 +91,30 @@ function handleCanvasClick(event, canvas, sourceArray, targetArray) {
                 clickedIndex = index;
         }
     });
+
+    if (delToggle && clickedIndex !== null) {
+        sourceArray.splice(clickedIndex, 1);
+        draw();
+    }
     
-    if (clickedIndex !== null) {
+    else if (clickedIndex !== null) {
         if (targetArray === iblocks && targetArray.length >= 40) {
-            alert("Nah");
+            Swal.fire({
+                title: 'Get to work!',
+                text: `Finish previous tasks to add more.`,
+                icon: 'warning',
+                heightAuto: false,
+                confirmButtonText: 'OK'
+            });
             return;
         } else if (targetArray === blocks && targetArray.length >= 5) {
-            alert("Enough tasks for one day!");
+            Swal.fire({
+                title: 'Overload',
+                text: `Enough tasks for one day!`,
+                icon: 'warning',
+                heightAuto: false,
+                confirmButtonText: 'OK'
+            });            
             return;
         } else {
             const [movedBlock] = sourceArray.splice(clickedIndex, 1);
@@ -107,12 +124,20 @@ function handleCanvasClick(event, canvas, sourceArray, targetArray) {
     }
 }
 
-canvas.addEventListener('click', (e) => handleCanvasClick(e, canvas, blocks, iblocks));
-ianvas.addEventListener('click', (e) => handleCanvasClick(e, ianvas, iblocks, blocks));
+let delToggle = 0;
+
+canvas.addEventListener('click', (e) => handleCanvasClick(e, canvas, blocks, iblocks, delToggle));
+ianvas.addEventListener('click', (e) => handleCanvasClick(e, ianvas, iblocks, blocks, delToggle));
 
 function addTask() {    
     if (iblocks.length >= 40) {
-        alert("Nah");
+        Swal.fire({
+            title: 'Get to work!',
+            text: `Finish previous tasks to add more.`,
+            icon: 'warning',
+            heightAuto: false,
+            confirmButtonText: 'OK'
+        });
         return;
     }
 
@@ -122,6 +147,7 @@ function addTask() {
         inputPlaceholder: 'e.g. Clean Room, Read...',
         showCancelButton: true,
         confirmButtonText: 'Add Task',
+        heightAuto: false,
         inputValidator: (value) => {
             if (!value) {
                 return 'Your task needs a name.';
@@ -137,10 +163,7 @@ function addTask() {
 }
 
 function removeTask() {
-    if (blocks.length > 0) {
-        blocks.pop();
-        draw();
-    }
+    delToggle = (delToggle+1) % 2;    
 }
 
 // Wheel spinning
@@ -148,7 +171,13 @@ function spinWheel() {
     const pointer = document.getElementById('blockPointer');
 
     if (blocks.length === 0) {
-        alert("Not enough tasks.");
+        Swal.fire({
+            title: 'Error',
+            text: `Add tasks to spin.`,
+            icon: 'error',
+            heightAuto: false,
+            confirmButtonText: 'OK'
+        });
         return;
     }
 
@@ -185,13 +214,14 @@ function spinWheel() {
 
 function showResult() {
     const finalPos = parseInt(document.getElementById('blockPointer').style.right, 10);
-    const winningIndex = Math.ceil(((735 - finalPos) / (730 / blocks.length)));
+    const winningIndex = Math.floor(((735 - finalPos) / (730 / blocks.length)));
     const winningBlock = blocks[winningIndex].name;
     
     Swal.fire({
         title: 'Task Selected',
         text: `Get to work on ${winningBlock}`,
         icon: 'success',
+        heightAuto: false,
         confirmButtonText: 'OK'
     });
 }

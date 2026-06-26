@@ -9,15 +9,16 @@
 </head>
 <body>
     <div class="wheel-container">
-        <canvas id="spinWheel" width="800" height="100"></canvas>
+        <canvas id="spinWheel" width="800" height="100" style="border-radius: 15px;"></canvas>
         <img src="https://www.freepnglogos.com/uploads/arrow-png/file-arrow-down-2.png" alt="Pointer" id="blockPointer" class="pointer" style="right:371px">
     </div>
     <div class="inventory-container">
-        <canvas id="inventory" width="1200" height="550"></canvas>
+        <canvas id="inventory" width="1200" height="550" style="background-color: #1c1c1c;"></canvas>
     </div>
     <div class="controls">
         <button class="spin-button" onclick="spinWheel()">Spin</button>
         <button class="spin-button" onclick="addTask()">Add Task</button>
+        <button class="del-button" onclick="removeTask(); this.classList.toggle('active')">Delete Task</button>
     </div>
 
     <script src="script.js"></script>

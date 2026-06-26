@@ -38,7 +38,7 @@ function drawWheel() {
         ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(index + 1, x + blockWidth / 2, y + blockHeight / 2);
+        ctx.fillText(block.name, x + blockWidth / 2, y + blockHeight / 2, blockWidth - 20);
     });
 }
 
@@ -62,7 +62,7 @@ function drawInventory() {
         itx.font = 'bold 14px Arial';
         itx.textAlign = 'center';
         itx.textBaseline = 'middle';
-        itx.fillText(index + 1, x + blockWidth / 2, y + blockHeight / 2);
+        itx.fillText(block.name, x + blockWidth / 2, y + blockHeight / 2, blockWidth - 20);
     });
 }
 
@@ -116,8 +116,24 @@ function addTask() {
         return;
     }
 
-    iblocks.push({});
-    draw();
+    Swal.fire({
+        title: 'Enter Task Name',
+        input: 'text',
+        inputPlaceholder: 'e.g. Clean Room, Read...',
+        showCancelButton: true,
+        confirmButtonText: 'Add Task',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Your task needs a name.';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            iblocks.push({name: result.value});
+            draw();
+        }
+    });
+
 }
 
 function removeTask() {
@@ -170,11 +186,11 @@ function spinWheel() {
 function showResult() {
     const finalPos = parseInt(document.getElementById('blockPointer').style.right, 10);
     const winningIndex = Math.ceil(((735 - finalPos) / (730 / blocks.length)));
-    const winningBlock = blocks[winningIndex];
+    const winningBlock = blocks[winningIndex].name;
     
     Swal.fire({
         title: 'Task Selected',
-        text: `Get to work on ${winningIndex}`,
+        text: `Get to work on ${winningBlock}`,
         icon: 'success',
         confirmButtonText: 'OK'
     });

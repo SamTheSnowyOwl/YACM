@@ -15,10 +15,18 @@
     <div class="inventory-container">
         <canvas id="inventory" width="1200" height="550" style="background-color: #1c1c1c;"></canvas>
     </div>
+    
     <div class="controls">
         <button class="spin-button" onclick="spinWheel()">Spin</button>
         <button class="spin-button" onclick="addTask()">Add Task</button>
         <button class="del-button" onclick="removeTask(); this.classList.toggle('active')">Delete Task</button>
+    </div>    
+
+    <div class="editable-card">
+        <h2 contenteditable="true" style="margin-bottom: 5px; color: antiquewhite;">Reminders</h2>
+        <p contenteditable="true" style="background-color: #1c1c1c; color: antiquewhite; margin-top: 0; width: 60vw; min-height: 5vh;">
+            You can click inside this paragraph block and type whatever text you want. It behaves completely like a rich text canvas area.
+        </p>
     </div>
 
     <script src="script.js"></script>
